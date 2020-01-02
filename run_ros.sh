@@ -1,5 +1,5 @@
 docker run -it \
 				--hostname melodic \
 				--name melodic \
-				-v /home/dan/ws/ros:/home/dan/ws/ros \
+				--mount type=bind,source=/home/dan/ws/ros,target=/home/dan/ws/ros \
 				melodic
