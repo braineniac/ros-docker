@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 docker build \
 				--build-arg UNAME=$(whoami) \
 				--build-arg UID=$(id -u) \

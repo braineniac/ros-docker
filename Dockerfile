@@ -1,12 +1,16 @@
-FROM ros:melodic
+FROM osrf/ros:melodic-desktop-full
 MAINTAINER Daniel Hammer braineniac@protonmail.com
+
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,video,utility
 
 RUN apt-get update && apt install -y \
 	sudo \
 	zsh \
 	wget \
 	vim \
-	fonts-powerline
+	fonts-powerline \
+	python-catkin-tools
 	
 
 ENV TERM xterm
@@ -29,6 +33,9 @@ COPY conf/.zshrc /home/$UNAME/.zshrc
 # create workspace
 RUN mkdir -p /home/$UNAME/ws/ros
 WORKDIR /home/$UNAME/ws/ros
+
+# set up ROS
+RUN rosdep update
 
 
 SHELL ["/bin/zsh", "-c", "source /opt/ros/melodic/setup.zsh"]
