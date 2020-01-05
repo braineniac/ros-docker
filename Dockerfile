@@ -10,8 +10,18 @@ RUN apt-get update && apt install -y \
 	wget \
 	vim \
 	fonts-powerline \
-	python-catkin-tools
+	python-catkin-tools \
+	mesa-utils
 	
+
+# install NVIDIA gpu driver and cuda
+RUN apt-get update && apt install -y --no-install-recommends \
+    software-properties-common \
+    && add-apt-repository -y ppa:graphics-drivers/ppa 
+RUN apt-get install -y build-essential dkms
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nvidia-driver-435
+RUN apt-get update && apt-get install -y --no-install-recommends nvidia-cuda-toolkit gcc
+ENV NVIDIA_REQUIRE_CUDA "cuda>=9.1"
 
 ENV TERM xterm
 ENV ZSH_THEME agnoster
