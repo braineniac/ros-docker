@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
 docker run -it \
-				--hostname $1 \
-				--name $1 \
-				--mount type=bind,source=/home/dan/ws/ros,target=/home/dan/ws/ros\
+				--rm \
+				--privileged \
+				--hostname ros-melodic \
+				--name ros-melodic \
+				--mount type=bind,source=/home/dan/work/ros,target=/home/dan/work/ros \
 				--net ros-network \
-				--env ROS_HOSTNAME=$1 \
+				--env ROS_HOSTNAME=ros-melodic \
 				--env ROS_MASTER_URI=http://master:11311 \
 				--gpus all \
 				--env="DISPLAY=$DISPLAY" \

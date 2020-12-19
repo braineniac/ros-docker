@@ -21,13 +21,15 @@ RUN apt-get update && apt install -y --no-install-recommends \
 RUN apt-get install -y build-essential dkms
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nvidia-driver-435
 RUN apt-get update && apt-get install -y --no-install-recommends nvidia-cuda-toolkit gcc
-ENV NVIDIA_REQUIRE_CUDA "cuda>=9.1"
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+
 
 ENV TERM xterm
-ENV ZSH_THEME agnoster
+ENV ZSH_THEME powerlevel10k/powerlevel10k
 
 # configure user and groups
-ARG UNAME=user
+ARG UNAME=dan
 ENV USER $UNAME
 ARG UID=1000
 ARG GID=1000
@@ -38,11 +40,13 @@ USER $UNAME
 
 # zsh
 RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
-COPY conf/.zshrc /home/$UNAME/.zshrc
+RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
+COPY ./conf/.zshrc /home/$UNAME/.zshrc
+COPY ./conf/.p10k.zsh /home/$UNAME/.p10k.zsh
 
 # create workspace
-RUN mkdir -p /home/$UNAME/ws/ros
-WORKDIR /home/$UNAME/ws/ros
+RUN mkdir -p /home/$UNAME/work/ros
+WORKDIR /home/$UNAME/work/ros
 
 # set up ROS
 RUN rosdep update
